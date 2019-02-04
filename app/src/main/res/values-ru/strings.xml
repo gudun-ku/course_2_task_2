@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Курс 2 задание 2</string>
+    <string name="lbl_button_start">Пуск</string>
+    <string name="lbl_button_finish">Готово!</string>
+    <string name="str_msg_finish">Загрузка завершена!</string>
+</resources>

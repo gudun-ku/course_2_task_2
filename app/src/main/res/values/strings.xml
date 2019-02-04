@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Course 2 Assigment 2</string>
+    <string name="lbl_button_start">Start</string>
+    <string name="lbl_button_finish">Done!</string>
+    <string name="str_msg_finish">Download completed!</string>
+</resources>
