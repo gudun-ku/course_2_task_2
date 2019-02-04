@@ -58,7 +58,10 @@ public class ProgressService extends Service {
 
     }
 
-    private void sendFinish() {
+    private void stopAndSendFinish() {
+        // Stop the executors
+        mScheduledExecutorService.shutdownNow();
+        mIsRunning = false;
         // Here we again have to use handler because of updating activity components
         // from another thread.
         handler.post(new Runnable() {
@@ -74,6 +77,11 @@ public class ProgressService extends Service {
     private int currentProgress;
     private int secondaryProgress = 100;
     private int maxProgress = 100;
+    private boolean mIsRunning;
+
+    public boolean isRunning() {
+        return  mIsRunning;
+    }
 
     public int getSecondaryProgress() {
         return secondaryProgress;
@@ -110,38 +118,42 @@ public class ProgressService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        mScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-
-                if (currentProgress >= 100) {
-                    sendFinish();
-                } else {
-                    currentProgress += 5;
-                    sendUpdate(currentProgress);
-                }
-
-            }
-        }, 1000, 200, TimeUnit.MILLISECONDS);
         return mBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mScheduledExecutorService.shutdownNow();
         return true;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
+        // when we press start button, service starts again, so reset progress.
+        currentProgress = 0;
+
+        mScheduledExecutorService = Executors.newScheduledThreadPool(1);
+        mScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+
+                if (currentProgress >= 100) {
+                    stopAndSendFinish();
+                } else {
+                    currentProgress += 5;
+                    sendUpdate(currentProgress);
+                }
+
+
+            }
+        }, 1000, 200, TimeUnit.MILLISECONDS);
+        mIsRunning = true;
+        return START_NOT_STICKY;
     }
 
 
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate: ");
-        mScheduledExecutorService = Executors.newScheduledThreadPool(1);
     }
 
     @Override
@@ -149,5 +161,6 @@ public class ProgressService extends Service {
         Log.d(TAG, "onDestroy: ");
         //!!! stop the executor service!!!
         mScheduledExecutorService.shutdownNow();
+        mIsRunning = false;
     }
 }

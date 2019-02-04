@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity  implements
         public void onServiceConnected(ComponentName className, IBinder service) {
             mProgressService = ((ProgressService.ProgressBinder)service).getService();
             mProgressService.registerListener(MainActivity.this);
-            mProgressService.setCurrentProgress(0);
-
             Resources res = getResources();
             Drawable drawable = res.getDrawable(R.drawable.circular);
             mProgress = findViewById(R.id.circularProgressbar);
@@ -90,25 +88,34 @@ public class MainActivity extends AppCompatActivity  implements
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    protected void onResume() {
+        super.onResume();
         btnStart = findViewById(R.id.btn_start);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsBound) {
-                    if (mProgressService != null) {
-                       mProgressService.decreaseProgressByFiftyPercent();
+                if (mProgressService != null && mProgressService.isRunning()) {
+                    if (mIsBound) {
+                        mProgressService.decreaseProgressByFiftyPercent();
+                    } else {
+                        doBindService();
                     }
+
                 } else {
+                    Intent serviceIntent = new Intent(getApplicationContext(), ProgressService.class);
+                    startService(serviceIntent);
                     doBindService();
                 }
             }
         });
 
         doBindService();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
     }
 
