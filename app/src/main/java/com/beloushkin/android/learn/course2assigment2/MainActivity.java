@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity  implements
             mProgressService = ((ProgressService.ProgressBinder)service).getService();
             mProgressService.registerListener(MainActivity.this);
             mProgressService.setCurrentProgress(0);
-            btnStart.setText(getString(R.string.lbl_button_start));
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity  implements
          btnStart.setText(getString(R.string.lbl_button_finish));
          showToast(getString(R.string.str_msg_finish));
          doUnbindService();
+        btnStart.setText(getString(R.string.lbl_button_start));
     }
 
     @Override
