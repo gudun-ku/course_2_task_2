@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity  implements
             mProgressService = ((ProgressService.ProgressBinder)service).getService();
             mProgressService.registerListener(MainActivity.this);
             mProgressService.setCurrentProgress(0);
+            btnStart.setText(getString(R.string.lbl_button_start));
         }
 
         public void onServiceDisconnected(ComponentName className) {
