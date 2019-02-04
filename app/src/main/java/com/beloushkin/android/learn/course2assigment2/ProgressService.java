@@ -72,7 +72,16 @@ public class ProgressService extends Service {
     }
 
     private int currentProgress;
+    private int secondaryProgress = 100;
+    private int maxProgress = 100;
 
+    public int getSecondaryProgress() {
+        return secondaryProgress;
+    }
+
+    public int getMaxProgress() {
+        return maxProgress;
+    }
 
     public int getCurrentProgress() {
         return currentProgress;
@@ -80,6 +89,12 @@ public class ProgressService extends Service {
 
     public void setCurrentProgress(int currentProgress) {
         this.currentProgress = currentProgress;
+    }
+
+    public void decreaseProgressByFiftyPercent() {
+        int currProgress = getCurrentProgress();
+        currProgress = currProgress - 50 >= 0 ? currProgress - 50 : 0;
+        setCurrentProgress(currProgress);
     }
 
     /**

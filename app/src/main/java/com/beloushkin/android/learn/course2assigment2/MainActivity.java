@@ -30,6 +30,14 @@ public class MainActivity extends AppCompatActivity  implements
             mProgressService = ((ProgressService.ProgressBinder)service).getService();
             mProgressService.registerListener(MainActivity.this);
             mProgressService.setCurrentProgress(0);
+
+            Resources res = getResources();
+            Drawable drawable = res.getDrawable(R.drawable.circular);
+            mProgress = findViewById(R.id.circularProgressbar);
+            mProgress.setProgress(mProgressService.getCurrentProgress());   // Main Progress
+            mProgress.setSecondaryProgress(mProgressService.getSecondaryProgress()); // Secondary Progress
+            mProgress.setMax(mProgressService.getMaxProgress()); // Maximum Progress
+            mProgress.setProgressDrawable(drawable);
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -86,23 +94,13 @@ public class MainActivity extends AppCompatActivity  implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Resources res = getResources();
-        Drawable drawable = res.getDrawable(R.drawable.circular);
-        mProgress = findViewById(R.id.circularProgressbar);
-        mProgress.setProgress(0);   // Main Progress
-        mProgress.setSecondaryProgress(100); // Secondary Progress
-        mProgress.setMax(100); // Maximum Progress
-        mProgress.setProgressDrawable(drawable);
-
         btnStart = findViewById(R.id.btn_start);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mIsBound) {
                     if (mProgressService != null) {
-                        int currProgress = mProgressService.getCurrentProgress();
-                        currProgress = currProgress - 50 >= 0 ? currProgress - 50 : 0;
-                        mProgressService.setCurrentProgress(currProgress);
+                       mProgressService.decreaseProgressByFiftyPercent();
                     }
                 } else {
                     doBindService();
@@ -111,6 +109,7 @@ public class MainActivity extends AppCompatActivity  implements
         });
 
         doBindService();
+
     }
 
 }
