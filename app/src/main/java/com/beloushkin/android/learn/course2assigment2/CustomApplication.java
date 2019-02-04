@@ -5,7 +5,7 @@ import android.content.Intent;
 
 public class CustomApplication extends Application {
 
-    //have to start our service before creating activity
+    //have to start our service before creating main activity
     @Override
     public void onCreate() {
         super.onCreate();

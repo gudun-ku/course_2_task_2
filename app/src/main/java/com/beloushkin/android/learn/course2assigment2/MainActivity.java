@@ -90,6 +90,20 @@ public class MainActivity extends AppCompatActivity  implements
     @Override
     protected void onResume() {
         super.onResume();
+        doBindService();
+    }
+
+    @Override
+    protected void onPause() {
+        doUnbindService();
+        super.onPause();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         btnStart = findViewById(R.id.btn_start);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,14 +122,6 @@ public class MainActivity extends AppCompatActivity  implements
                 }
             }
         });
-
-        doBindService();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
     }
 
